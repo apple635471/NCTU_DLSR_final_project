@@ -1,12 +1,23 @@
 from time import time
-def timing(preprocess_fn):
+def pre(data):
+    print(data+', hello')
+    return 
+def benchmarking(token, preprocess_fn, *pre_args, **pre_kwargs):
     def decorator(inference_fn):
-        def wrapper(model, data_loader):
+        def wrapper(*args,**kwargs):
             if preprocess_fn is not None:
-                preprocess_fn()
+                preprocess_fn(*pre_args, **pre_kwargs)
             s = time()
-            inference_fn(model, data_loader)
-            e = time() 
-            return e - s
+            metric = inference_fn(*args, **kwargs)
+            e = time()
+            inference_time = e - s
+            print("metric:{}, {} s".format(metric, inference_time))
+            return metric, inference_time
         return wrapper
     return decorator
+'''
+@benchmarking(token='0xcd', preprocess_fn=pre)
+def foo():
+    print('world')
+    return 666
+'''
