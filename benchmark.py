@@ -1,12 +1,13 @@
 from time import time
-def timing(preprocess_fn):
+def benchmarking(preprocess_fn):
     def decorator(inference_fn):
         def wrapper(model, data_loader):
             if preprocess_fn is not None:
                 preprocess_fn()
             s = time()
-            inference_fn(model, data_loader)
-            e = time() 
-            return e - s
+            metric = inference_fn(model, data_loader)
+            e = time()
+            inference_time = e - s
+            return metric, inference_time
         return wrapper
     return decorator
